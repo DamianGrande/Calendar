@@ -1,7 +1,50 @@
 {% extends "main/base.html" %}
 
 {% block calendarWeek %}
-    <div id="calendar-week" class="container">calendar week</div>
+    <div id="calendar-week" class="container">
+        <div class="columns is-mobile">
+            <calendar-day v-for="day in days" :key="day.id" :day="day"/>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.12/vue.min.js"></script>
+    <script>
+        const calendarDay =
+            {
+                template: `
+                    <div class="day column" id="day.id">
+                        <div class="day-banner has-text-centered">#{ day.abbvTitle }</div>
+                        <div class="day-details">
+                            <div class="day-number">#{ day.id }</div>
+                            <div v-for="event in day.events" :key="event" class="day-event"
+                                 style="background-color: rgb(153, 255, 153)">
+                                <div>
+                                    <span class="has-text-centered details">#{ event.details }</span>
+                                    <div class="has-text-centered icons">
+                                        <i class="fa fa-pencil-square edit-icon"></i>
+                                        <i class="fa fa-trash-o delete-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                delimiters: ['#{', '}'],
+                props: ['day']
+            };
+
+        new Vue(
+            {
+                el: '#calendar-week',
+                delimiters: ['#{', '}'],
+                data: {
+                    'days': {{ days|safe }},
+                },
+                components: {
+                    'calendar-day': calendarDay
+                }
+            }
+        );
+    </script>
 {% endblock %}
 
 {% block calendarEntry %}
